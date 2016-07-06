@@ -1,0 +1,63 @@
+<?php
+
+namespace DummyNamespace;
+
+use App\Repositories\Repository;
+use App\Models\{{model}};
+
+class DummyClass extends Repository
+{
+    /**
+     * Attributes that could be searchable.
+     *
+     * @var array
+     */
+    protected $searchFields = {{searchFields}};
+
+    /**
+     * Attributes that could be sortable.
+     *
+     * @var array
+     */
+    protected $sortFields = {{sortFields}};
+
+    public function __construct({{model}} $model)
+    {
+        $this->model = $model;
+    }
+
+    public function getAllPaginated($searchCondition, $count=15)
+    {
+        $condition = $this->model->whereRaw('1');
+
+        if(isset($searchCondition['keyword']) && $searchCondition['keyword'])
+        {
+            if(is_array($this->searchFields) && $this->searchFields)
+            {
+                $keyword = trim($searchCondition['keyword']);
+                $searchSql = '(';
+                $searchValueSql = [];
+                foreach($this->searchFields as $key => $field)
+                {
+                    $searchSql .= ($key>0?'or ':'') . '`'.$field.'` like ? ';
+                    $searchValueSql[] = '%' . $keyword . '%';
+                }
+                $searchSql .= ')';
+                $condition->whereRaw($searchSql, $searchValueSql);
+            }
+        }
+
+        // 排序
+        if(isset($searchCondition['order']) && in_array($searchCondition['order'], $this->sortFields))
+        {
+            $sortBy = (isset($searchCondition['sort']) && $searchCondition['sort'] == 'desc')?'desc':'asc';
+            $condition->orderBy($searchCondition['order'], $sortBy);
+        }
+        else
+        {
+            $condition->orderBy('created_at', 'desc');
+        }
+
+        return $condition->paginate($count);
+    }
+}

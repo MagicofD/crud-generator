@@ -186,7 +186,7 @@ class CrudViewCommand extends Command
     {
         $this->crudName = strtolower($this->argument('name'));
         $this->crudNameCap = ucwords($this->crudName);
-        $this->crudNameSingular = str_singular($this->crudName);
+        $this->crudNameSingular = 'model';
         $this->modelName = str_singular($this->argument('name'));
         $this->primaryKey = $this->option('pk');
         $this->routeGroup = ($this->option('route-group')) ? $this->option('route-group') . '/' : $this->option('route-group');

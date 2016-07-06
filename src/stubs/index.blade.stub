@@ -13,7 +13,7 @@
             </thead>
             <tbody>
             {{-- */$x=0;/* --}}
-            @foreach($%%crudName%% as $item)
+            @foreach($list as $item)
                 {{-- */$x++;/* --}}
                 <tr>
                     <td>{{ $x }}</td>
@@ -38,7 +38,7 @@
             @endforeach
             </tbody>
         </table>
-        <div class="pagination-wrapper"> {!! $%%crudName%%->render() !!} </div>
+        <div class="pagination-wrapper"> {!! $list->render() !!} </div>
     </div>
 
 </div>
