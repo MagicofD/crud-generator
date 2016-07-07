@@ -1,29 +1,96 @@
-@extends('layouts.app')
+@extends('backend._layout')
+
+@section('pageStyles')
+@stop
+
+
 
 @section('content')
-<div class="container">
 
-    <h1>Create New %%modelName%%</h1>
-    <hr/>
-
-    {!! Form::open(['url' => '/%%routeGroup%%%%viewName%%', 'class' => 'form-horizontal']) !!}
-
-    %%formFieldsHtml%%
-
-    <div class="form-group">
-        <div class="col-sm-offset-3 col-sm-3">
-            {!! Form::submit('Create', ['class' => 'btn btn-primary form-control']) !!}
+<!-- BEGIN PAGE HEADER-->
+<div class="page-bar">
+    <ul class="page-breadcrumb">
+        <li>
+            <i class="fa fa-home"></i>
+            <a href="{!! route('backend.home') !!}">后台首页</a>
+            <i class="fa fa-angle-right"></i>
+        </li>
+        <li>
+            <a href="{!! route($viewPath . '.index') !!}">{{ $modelTitle }}管理</a>
+            <i class="fa fa-angle-right"></i>
+        </li>
+        <li>
+            <span>{!! (isset($model) && $model->id)?'编辑':'新增' !!}{{ $modelTitle }}</span>
+        </li>
+    </ul>
+    <div class="page-toolbar">
+        <div class="btn-group pull-right">
         </div>
     </div>
-    {!! Form::close() !!}
-
-    @if ($errors->any())
-        <ul class="alert alert-danger">
-            @foreach ($errors->all() as $error)
-                <li>{{ $error }}</li>
-            @endforeach
-        </ul>
-    @endif
-
 </div>
-@endsection
+
+
+
+<div class="row">
+    <div class="col-md-12">
+        <!-- BEGIN VALIDATION STATES-->
+        <div class="portlet box green-meadow">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-gift"></i> {!! (isset($model) && $model->id)?'编辑':'新增' !!}{{ $modelTitle }}
+                </div>
+            </div>
+            <div class="portlet-body form">
+                <!-- BEGIN FORM-->
+                @if(isset($model) && $model->id)
+                {!! Form::model($model, ['route'=>[$viewPath . '.update', $model->id], 'method'=>'PUT', 'class'=>'form-horizontal', 'id'=>'uploadForm', 'enctype'=>'multipart/form-data']) !!}
+                @else
+                {!! Form::open(['route'=>$viewPath . '.store', 'class'=>'form-horizontal', 'id'=>'uploadForm', 'enctype'=>'multipart/form-data']) !!}
+                @endif
+                <div class="form-body">
+
+                    @if ($errors->all())
+                    <div class="alert alert-danger">
+                        <ul>
+                            @foreach($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                    @endif
+
+                    @if (Session::get('message'))
+                    <div class="alert alert-success">
+                        <button class="close" data-close="alert"></button>
+                        {{ Session::get('message') }}
+                    </div>
+                    @endif
+
+
+                    %%formFieldsHtml%%
+
+
+                </div>
+                <div class="form-actions">
+                    <div class="row">
+                        <div class="col-md-offset-2 col-md-10">
+                            <button type="submit" class="btn green">  <i class="fa fa-check"></i> 保存 </button>
+                            <button type="button" class="btn default" onclick="javascript:history.go(-1)">返回</button>
+                        </div>
+                    </div>
+                </div>
+                {!! Form::close() !!}
+                <!-- END FORM-->
+
+            </div>
+        </div>
+        <!-- END VALIDATION STATES-->
+    </div>
+</div>
+
+@stop
+
+
+@section('pageScripts')
+
+@stop

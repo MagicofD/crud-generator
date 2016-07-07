@@ -214,7 +214,7 @@ class CrudViewCommand extends Command
             foreach ($fieldsArray as $item) {
                 $itemArray = explode('#', $item);
                 $this->formFields[$x]['name'] = trim($itemArray[0]);
-                $this->formFields[$x]['type'] = trim($itemArray[1]);
+                $this->formFields[$x]['type'] = isset($itemArray[1])?trim($itemArray[1]):'string';
                 $this->formFields[$x]['required'] = (isset($itemArray[2]) && (trim($itemArray[2]) == 'req' || trim($itemArray[2]) == 'required')) ? true : false;
 
                 $x++;
@@ -261,6 +261,7 @@ class CrudViewCommand extends Command
             $this->templateCreateVars($newCreateFile);
         }
 
+/*
         // For edit.blade.php file
         $editFile = $this->viewDirectoryPath . 'edit.blade.stub';
         $newEditFile = $path . 'edit.blade.php';
@@ -268,7 +269,7 @@ class CrudViewCommand extends Command
             echo "failed to copy $editFile...\n";
         } else {
             $this->templateEditVars($newEditFile);
-        }
+        }*/
 
         // For show.blade.php file
         $showFile = $this->viewDirectoryPath . 'show.blade.stub';
@@ -372,7 +373,7 @@ class CrudViewCommand extends Command
         $formGroup =
             <<<EOD
             <div class="form-group {{ \$errors->has('%1\$s') ? 'has-error' : ''}}">
-                {!! Form::label('%1\$s', %2\$s, ['class' => 'col-sm-3 control-label']) !!}
+                {!! Form::label('%1\$s', %2\$s, ['class' => 'col-sm-2 control-label']) !!}
                 <div class="col-sm-6">
                     %3\$s
                     {!! \$errors->first('%1\$s', '<p class="help-block">:message</p>') !!}

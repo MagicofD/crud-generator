@@ -2,7 +2,8 @@
 
 namespace DummyNamespace;
 
-use App\Repositories\{{modelName}}Repository;
+use App\Http\Controllers\Backend\BaseController;
+use App\Repositories\Know\{{modelName}}Repository;
 
 class DummyClass extends BaseController
 {
