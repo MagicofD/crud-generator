@@ -205,6 +205,7 @@ class CrudViewCommand extends Command
         }
 
         $fields = $this->option('fields');
+        $fields = str_replace("'", '', $fields);
         $fieldsArray = explode(',', $fields);
 
         $this->formFields = array();

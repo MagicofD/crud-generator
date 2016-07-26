@@ -15,6 +15,7 @@ class CrudControllerCommand extends GeneratorCommand
                             {name : The name of the controler.}
                             {--crud-name= : The name of the Crud.}
                             {--model-name= : The name of the Model.}
+                            {--repository-path= : The name of the repository path.}
                             {--view-path= : The name of the view path.}
                             {--required-fields= : Required fields for validations.}
                             {--route-group= : Prefix of the route group.}';
@@ -69,6 +70,7 @@ class CrudControllerCommand extends GeneratorCommand
         $stub = $this->files->get($this->getStub());
 
         $viewPath = $this->option('view-path') ? $this->option('view-path') : '';
+        $repositoryPath = $this->option('repository-path') ? $this->option('repository-path') : '';
         $crudName = strtolower($this->option('crud-name'));
         $crudNameSingular = str_singular($crudName);
         $modelName = $this->option('model-name');
@@ -81,6 +83,7 @@ class CrudControllerCommand extends GeneratorCommand
         }
 
         return $this->replaceNamespace($stub, $name)
+            ->replaceRepositoryPath($stub, $repositoryPath)
             ->replaceViewPath($stub, $viewPath)
             ->replaceViewName($stub, $viewName)
             ->replaceCrudName($stub, $crudName)
@@ -120,6 +123,23 @@ class CrudControllerCommand extends GeneratorCommand
     {
         $stub = str_replace(
             '{{viewPath}}', $viewPath, $stub
+        );
+
+        return $this;
+    }
+
+    /**
+     * Replace the repositoryPath for the given stub.
+     *
+     * @param  string  $stub
+     * @param  string  $repositoryPath
+     *
+     * @return $this
+     */
+    protected function replaceRepositoryPath(&$stub, $repositoryPath)
+    {
+        $stub = str_replace(
+            '{{repositoryPath}}', $repositoryPath, $stub
         );
 
         return $this;
