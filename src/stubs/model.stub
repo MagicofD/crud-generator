@@ -1,10 +1,10 @@
 <?php
 
 namespace DummyNamespace;
-
+{{softDeleteImport}}
 class DummyClass extends Model
 {
-    /**
+{{softDeleteAttribute}}    /**
      * The database table used by the model.
      *
      * @var string
