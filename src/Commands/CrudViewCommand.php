@@ -186,7 +186,7 @@ class CrudViewCommand extends Command
     {
         $this->crudName = strtolower($this->argument('name'));
         $this->crudNameCap = ucwords($this->crudName);
-        $this->crudNameSingular = str_singular($this->crudName);
+        $this->crudNameSingular = 'model';
         $this->modelName = str_singular($this->argument('name'));
         $this->primaryKey = $this->option('pk');
         $this->routeGroup = ($this->option('route-group')) ? $this->option('route-group') . '/' : $this->option('route-group');
@@ -205,6 +205,7 @@ class CrudViewCommand extends Command
         }
 
         $fields = $this->option('fields');
+        $fields = str_replace("'", '', $fields);
         $fieldsArray = explode(',', $fields);
 
         $this->formFields = array();
@@ -214,7 +215,7 @@ class CrudViewCommand extends Command
             foreach ($fieldsArray as $item) {
                 $itemArray = explode('#', $item);
                 $this->formFields[$x]['name'] = trim($itemArray[0]);
-                $this->formFields[$x]['type'] = trim($itemArray[1]);
+                $this->formFields[$x]['type'] = isset($itemArray[1])?trim($itemArray[1]):'string';
                 $this->formFields[$x]['required'] = (isset($itemArray[2]) && (trim($itemArray[2]) == 'req' || trim($itemArray[2]) == 'required')) ? true : false;
 
                 $x++;
@@ -261,14 +262,15 @@ class CrudViewCommand extends Command
             $this->templateCreateVars($newCreateFile);
         }
 
-        // For edit.blade.php file
+/*
+        // For edit1.blade.php file
         $editFile = $this->viewDirectoryPath . 'edit.blade.stub';
-        $newEditFile = $path . 'edit.blade.php';
+        $newEditFile = $path . 'edit1.blade.php';
         if (!File::copy($editFile, $newEditFile)) {
             echo "failed to copy $editFile...\n";
         } else {
             $this->templateEditVars($newEditFile);
-        }
+        }*/
 
         // For show.blade.php file
         $showFile = $this->viewDirectoryPath . 'show.blade.stub';
@@ -372,7 +374,7 @@ class CrudViewCommand extends Command
         $formGroup =
             <<<EOD
             <div class="form-group {{ \$errors->has('%1\$s') ? 'has-error' : ''}}">
-                {!! Form::label('%1\$s', %2\$s, ['class' => 'col-sm-3 control-label']) !!}
+                {!! Form::label('%1\$s', %2\$s, ['class' => 'col-sm-2 control-label']) !!}
                 <div class="col-sm-6">
                     %3\$s
                     {!! \$errors->first('%1\$s', '<p class="help-block">:message</p>') !!}

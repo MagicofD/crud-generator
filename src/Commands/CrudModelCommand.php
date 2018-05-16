@@ -15,6 +15,7 @@ class CrudModelCommand extends GeneratorCommand
                             {name : The name of the model.}
                             {--table= : The name of the table.}
                             {--fillable= : The names of the fillable columns.}
+                            {--softDelete= : has soft delete column.}
                             {--pk=id : The name of the primary key.}';
 
     /**
@@ -51,7 +52,7 @@ class CrudModelCommand extends GeneratorCommand
      */
     protected function getDefaultNamespace($rootNamespace)
     {
-        return $rootNamespace;
+        return $rootNamespace . '\Models';
     }
 
     /**
@@ -68,6 +69,7 @@ class CrudModelCommand extends GeneratorCommand
         $table = $this->option('table') ?: $this->argument('name');
         $fillable = $this->option('fillable');
         $primaryKey = $this->option('pk');
+        $softDelete = $this->option('softDelete')?true:false;
 
         if(!empty($primaryKey)) {
             $primaryKey = <<<EOD
@@ -84,6 +86,7 @@ EOD;
         return $this->replaceNamespace($stub, $name)
             ->replaceTable($stub, $table)
             ->replaceFillable($stub, $fillable)
+            ->replaceSoftDelete($stub, $softDelete)
             ->replacePrimaryKey($stub, $primaryKey)
             ->replaceClass($stub, $name);
     }
@@ -117,6 +120,43 @@ EOD;
     {
         $stub = str_replace(
             '{{fillable}}', $fillable, $stub
+        );
+
+        return $this;
+    }
+
+    /**
+     * Replace the softDelete for the given stub.
+     *
+     * @param  string  $stub
+     * @param  string  $fillable
+     *
+     * @return $this
+     */
+    protected function replaceSoftDelete(&$stub, $softDelete)
+    {
+        $stub = str_replace(
+            '{{softDeleteImport}}', $softDelete?"\n".'use Illuminate\Database\Eloquent\SoftDeletes;'."\n":'', $stub
+        );
+
+        $softDeleteAttribute = '';
+        if($softDelete)
+        {
+            $softDeleteAttribute = <<<EOD
+    use SoftDeletes;
+
+    /**
+     * The attributes that should be mutated to dates.
+     *
+     * @var array
+     */
+    protected \$dates = ['deleted_at'];
+
+EOD;
+        }
+
+        $stub = str_replace(
+            '{{softDeleteAttribute}}', $softDeleteAttribute, $stub
         );
 
         return $this;

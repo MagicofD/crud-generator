@@ -29,7 +29,15 @@ class CrudGeneratorServiceProvider extends ServiceProvider
         ]);
 
         $this->publishes([
-            __DIR__ . '/../publish/EnumTrait.php' => app_path('EnumTrait.php'),
+            __DIR__ . '/../publish/EnumTrait.php' => app_path('Tools/EnumTrait.php'),
+        ]);
+
+        $this->publishes([
+            __DIR__ . '/../publish/Model.php' => app_path('Models/Model.php'),
+        ]);
+
+        $this->publishes([
+            __DIR__ . '/../publish/Repository.php' => app_path('Repositories/Repository.php'),
         ]);
 
         $this->publishes([
@@ -50,7 +58,8 @@ class CrudGeneratorServiceProvider extends ServiceProvider
             'Appzcoder\CrudGenerator\Commands\CrudModelCommand',
             'Appzcoder\CrudGenerator\Commands\CrudMigrationCommand',
             'Appzcoder\CrudGenerator\Commands\CrudViewCommand',
-            'Appzcoder\CrudGenerator\Commands\CrudLangCommand'
+            'Appzcoder\CrudGenerator\Commands\CrudLangCommand',
+            'Appzcoder\CrudGenerator\Commands\CrudRepositoryCommand'
         );
     }
 }
